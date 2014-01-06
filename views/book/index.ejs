@@ -2,8 +2,8 @@
 <form id="form" method="POST" action="/book/create">
     <% if (flash && flash.err) { %>
         <ul class="alert">
-        <% Object.keys(flash.err.ValidationError).forEach(function (error) { %>
-            <li><%= error %>: <%- JSON.stringify(flash.err.ValidationError[error]) %></li>
+        <% Object.keys(flash.err).forEach(function (error) { %>
+            <li><%= error %>: <%- JSON.stringify(flash.err[error]) %></li>
         <%  }) %>
         </ul>
     <% } %>

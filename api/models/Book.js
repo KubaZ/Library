@@ -22,6 +22,10 @@ module.exports = {
 
     categories: {
       type: 'array'
+    },
+
+    user: {
+      type: 'string'
     }
   }
 };

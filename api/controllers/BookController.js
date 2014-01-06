@@ -17,12 +17,6 @@
  var https = require('https');
 
 module.exports = {
-  /**
-   * Overrides for the settings in `config/controllers.js`
-   * (specific to BookController)
-   */
-  _config: {},
-
   add: function (req, res) {
     https.get('https://www.googleapis.com/books/v1/volumes?q=ISBN+' +
       req.param('isbn') + '&key=' + sails.config.googleBooksApiKey, function(response) {
@@ -36,7 +30,6 @@ module.exports = {
       response.on('end', function() {
         var body = JSON.parse(data);
 
-        console.log(body);
         if (body.items) {
           if (body.items[0].volumeInfo.categories) {
                 categories = body.items[0].volumeInfo.categories;
@@ -46,7 +39,8 @@ module.exports = {
             isbn: req.param('isbn'),
             title: body.items[0].volumeInfo.title,
             authors: body.items[0].volumeInfo.authors,
-            categories: categories
+            categories: categories,
+            user: req.session.User
           }).done(function (err, book) {
             if (err) {
               req.session.flash = {
@@ -66,6 +60,11 @@ module.exports = {
 
   index: function (req, res) {
     Book.find().done(function(err, books) {
+      if (err) {
+        req.session.flash = {
+          err: err
+        };
+      }
       res.view({
         books: books
       });
@@ -73,7 +72,7 @@ module.exports = {
   },
 
   remove: function (req, res) {
-    Book.destroy({isbn: req.param('isbn')}).done(function(err, book) {
+    Book.destroy({isbn: req.param('isbn'), user: req.session.User}).done(function(err, book) {
       if (err) {
         req.session.flash = {
           err: err
