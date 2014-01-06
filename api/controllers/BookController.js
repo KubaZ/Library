@@ -83,11 +83,15 @@ module.exports = {
               };
 
               res.redirect('/user/library');
-              next();
             }
           });
         }).on('error', function(err) {
-          res.json(err);
+          req.session.flash = {
+            type: 'alert-danger',
+            content: [{message: err}]
+          };
+
+          res.redirect('/user/library');
           next();
         });
       } else {
