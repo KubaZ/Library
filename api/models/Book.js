@@ -10,11 +10,13 @@ module.exports = {
 
   attributes: {
     title: {
-      type: 'string'
+      type: 'string',
+      required: true
     },
 
     authors: {
-      type: 'array'
+      type: 'array',
+      required: true
     },
 
     isbn: {
@@ -27,7 +29,8 @@ module.exports = {
     },
 
     user: {
-      type: 'array'
+      type: 'array',
+      required: true
     }
   }
 };

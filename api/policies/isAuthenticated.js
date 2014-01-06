@@ -21,5 +21,5 @@ module.exports = function(req, res, next) {
   req.session.flash = {
     err: requireLoginError
   };
-  return res.redirect('/session/new');
+  return res.redirect('/login');
 };

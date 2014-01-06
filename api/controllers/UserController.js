@@ -16,7 +16,7 @@
  */
 
 module.exports = {
-  new: function (req, res) {
+  register: function (req, res) {
     res.view();
   },
 
@@ -25,13 +25,29 @@ module.exports = {
       if (err) {
         console.log(err);
         req.session.flash = {
-          err: err
+          type: 'alert-danger',
+          content: err
         };
 
-        return res.redirect('/user/new');
+        return res.redirect('/user/register');
       }
 
-      return res.redirect('/session/new');
+      return res.redirect('/login');
     });
-  }
+  },
+
+  index: function (req, res) {
+    Book.find({user: req.session.User.email}).done(function(err, books) {
+      if (err) {
+        req.session.flash = {
+          type: 'alert-warning',
+          content: err
+        };
+      }
+      return res.view({
+          flash: req.session.flash,
+          books: books
+        });
+    });
+  },
 };

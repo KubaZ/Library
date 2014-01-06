@@ -17,8 +17,8 @@
 var bcrypt = require('bcrypt');
 
 module.exports = {
-  new: function (req, res) {
-    res.view('session/new');
+  login: function (req, res) {
+    res.view('session/login');
   },
 
   create: function (req, res, next) {
@@ -29,10 +29,11 @@ module.exports = {
       }];
 
       req.session.flash = {
-        err: usernamePasswordRequiredError
+        type: 'alert-danger',
+        content: usernamePasswordRequiredError
       }
 
-      return res.redirect('/session/new');;
+      return res.redirect('/login');;
     }
 
     User.findOneByEmail(req.param('email'), function foundUser (err, user) {
@@ -42,9 +43,10 @@ module.exports = {
         var noAccountError = [{name: 'noAccount', message: 'The email; addres ' +
         req.param('email') + ' not found.'}];
         req.session.flash = {
-          err: noAccountError
+          type: 'alert-danger',
+          content: noAccountError
         }
-        return res.redirect('/session/new');
+        return res.redirect('/login');
       }
 
       bcrypt.compare(req.param('password'), user.encryptedPassword, function (err, valid) {
@@ -53,23 +55,24 @@ module.exports = {
         if (!valid) {
           var invalidPassword = [{name: 'Invalid Password', message: 'Invalid username and password combination'}];
           req.session.flash = {
-            err: invalidPassword
+            type: 'alert-warning',
+            content: invalidPassword
           }
-          return res.redirect('/session/new');
+          return res.redirect('/login');
         }
 
         req.session.authenticated = true;
         req.session.User = user;
 
-        res.redirect('/book');
+        res.redirect('/user/library');
       });
     });
   },
 
-  destroy: function (req, res, next) {
+  logout: function (req, res, next) {
     req.session.destroy();
 
-    res.redirect('/session/new');
+    res.redirect('/login');
   }
 
 

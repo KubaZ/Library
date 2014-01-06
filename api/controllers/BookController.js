@@ -17,10 +17,19 @@
  var https = require('https');
 
 module.exports = {
-  add: function (req, res, next) {
+  index: function (req, res) {
+    res.redirect('/user/library');
+  },
+
+  create: function (req, res, next) {
     Book.find({isbn: req.param('isbn')}).done(function (err, book) {
       if (err) {
-
+        req.session.flash = {
+          type: 'alert-danger',
+          content: err
+        };
+        res.redirect('/user/library');
+        next();
       }
 
       if (book.length === 0) {
@@ -37,9 +46,10 @@ module.exports = {
             var body = JSON.parse(data);
 
             if (body.items) {
+              console.log(body.items);
               if (body.items[0].volumeInfo.categories) {
-                    categories = body.items[0].volumeInfo.categories;
-                }
+                categories = body.items[0].volumeInfo.categories;
+              }
 
               Book.create({
                 isbn: req.param('isbn'),
@@ -50,71 +60,70 @@ module.exports = {
               }).done(function (err, volume) {
                 if (err) {
                   req.session.flash = {
-                    err: err
+                    type: 'alert-danger',
+                    content: err
                   };
+
+                  res.redirect('/user/library');
+                  next();
                 }
-                res.redirect('/book');
+
+                req.session.flash = {
+                  type: 'alert-success',
+                  content: [{message: 'Book added to collection.'}]
+                };
+                res.redirect('/user/library');
                 next();
               });
             } else {
               req.session.flash = {
-                err: [{message: 'Book not Found.'}]
+                type: 'alert-danger',
+                content: [{message: 'Book not Found.'}]
               };
-              res.redirect('/book');
+              res.redirect('/user/library');
               next();
             }
           });
         }).on('error', function(e) {
           res.json(e);
+          next();
         });
       } else {
-        console.log(book);
         if (_.indexOf(book.user, req.session.User.email) !== -1) {
           book.user.push(req.session.User.email);
           req.session.flash = {
-            err: [{message: 'Book added to collection.'}]
+            type: 'alert-success',
+            content: [{message: 'Book added to collection.'}]
           };
-          res.redirect('/book');
-          next();
         } else {
           req.session.flash = {
-            err: [{message: 'Book already in collection.'}]
+            type: 'alert-info',
+            content: [{message: 'Book already in collection.'}]
           };
-          res.redirect('/book');
-          next();
         }
+
+        res.redirect('/user/library');
+        next();
       }
     });
   },
 
-  index: function (req, res) {
-    Book.find({user: req.session.User.email}).done(function(err, books) {
-      if (err) {
-        req.session.flash = {
-          err: err
-        };
-
-        return res.view({
-          flash: req.session.flash,
-          books: books
-        });
-      }
-      res.view({
-        books: books
-      });
-    });
-  },
-
-  remove: function (req, res) {
+  destroy: function (req, res) {
     Book.destroy({isbn: req.param('isbn'), user: req.session.User.email}).done(function(err, book) {
       if (err) {
         req.session.flash = {
-          err: err
+          type: 'alert-warning',
+          content: err
         };
-        return res.redirect('/book');
-      } else {
-        res.redirect('/book');
+        return res.redirect('/user/library');
       }
+
+      req.session.flash = {
+        type: 'alert-success',
+        content: [{message: 'Book removed from collection.'}]
+      };
+
+      res.redirect('/user/library');
     });
   }
 };

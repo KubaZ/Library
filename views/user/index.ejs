@@ -1,0 +1,51 @@
+<div class="container">
+    <form id="form" method="POST" action="/book/create" class="form col-md-4">
+        <h3 class="form-heading">Dodaj książkę:</h4>
+        <%- include ../common/flash.ejs %>
+        <div class="input-group">
+            <input class="form-control" name="isbn" type="text" placeholder="ISBN" />
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">Dodaj</button>
+            </span>
+        </div>
+        <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+    </form>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <td>Tytuł</td>
+                <td>Autor</td>
+                <td>Kategoria</td>
+                <td>ISBN</td>
+                <td>Data dodania</td>
+                <td>Usuń</td>
+            </tr>
+        </thead>
+        <tbody>
+            <% books.forEach(function(book)  { %>
+                <tr class="book">
+                    <td class="title"><%= book.title %></td>
+                    <td class="author">
+                        <% book.authors.forEach(function (author) { %>
+                            <span class="author" style="display:block;"><%= author %></span>
+                        <% }); %>
+                    </td>
+                    <td class="category">
+                        <% book.categories.forEach(function (category) { %>
+                            <span class="category"><%= category %></span>
+                        <% }); %>
+                    </td>
+                    <td class="isbn">
+                        <%= book.isbn %>
+                    </td>
+                    <td class="create-date">
+                        <%= book.createdAt %>
+                    </td>
+                    <td>
+                        <a href="/book/destroy?isbn=<%= book.isbn %>">Usuń</a>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
