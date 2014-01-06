@@ -46,7 +46,7 @@ module.exports = {
             var body = JSON.parse(data);
 
             if (body.items) {
-              console.log(body.items);
+              console.log('found');
               if (body.items[0].volumeInfo.categories) {
                 categories = body.items[0].volumeInfo.categories;
               }
@@ -76,16 +76,18 @@ module.exports = {
                 next();
               });
             } else {
+              console.log('not found');
               req.session.flash = {
                 type: 'alert-danger',
                 content: [{message: 'Book not Found.'}]
               };
+
               res.redirect('/user/library');
               next();
             }
           });
-        }).on('error', function(e) {
-          res.json(e);
+        }).on('error', function(err) {
+          res.json(err);
           next();
         });
       } else {
