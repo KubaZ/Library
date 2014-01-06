@@ -6,6 +6,8 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 module.exports = {
+  schema: true,
+
   attributes: {
     title: {
       type: 'string'
@@ -25,7 +27,7 @@ module.exports = {
     },
 
     user: {
-      type: 'string'
+      type: 'array'
     }
   }
 };

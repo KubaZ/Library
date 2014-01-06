@@ -20,12 +20,12 @@ module.exports.policies = {
 
   user: {
   	'new': 'flash',
+  	'create': 'flash',
   	'*': 'isAuthenticated'
   },
 
   book: {
-  	'add': 'isAuthenticated',
-  	'remove': 'isAuthenticated'
+  	'*': 'isAuthenticated'
   }
 
   /*
