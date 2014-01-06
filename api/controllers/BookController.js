@@ -23,7 +23,7 @@ module.exports = {
    */
   _config: {},
 
-  create: function (req, res) {
+  add: function (req, res) {
     https.get('https://www.googleapis.com/books/v1/volumes?q=ISBN+' +
       req.param('isbn') + '&key=' + sails.config.googleBooksApiKey, function(response) {
       var data = '',
@@ -44,23 +44,44 @@ module.exports = {
 
           Book.create({
             isbn: req.param('isbn'),
-              title: body.items[0].volumeInfo.title,
-              authors: body.items[0].volumeInfo.authors,
-              categories: categories
-          }).done(function (error, book) {
-            if (error) {
-              res.send(error, 500);
-            } else {
-              res.json(book);
+            title: body.items[0].volumeInfo.title,
+            authors: body.items[0].volumeInfo.authors,
+            categories: categories
+          }).done(function (err, book) {
+            if (err) {
+              req.session.flash = {
+                err: err
+              };
             }
+            res.redirect('/book');
           });
         } else {
           res.send('Not Found', 404);
         }
       });
     }).on('error', function(e) {
-      console.error(e);
       res.json(e);
+    });
+  },
+
+  index: function (req, res) {
+    Book.find().done(function(err, books) {
+      res.view({
+        books: books
+      });
+    });
+  },
+
+  remove: function (req, res) {
+    Book.destroy({isbn: req.param('isbn')}).done(function(err, book) {
+      if (err) {
+        req.session.flash = {
+          err: err
+        };
+        return res.redirect('/book');
+      } else {
+        res.redirect('/book');
+      }
     });
   }
 };

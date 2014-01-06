@@ -1,27 +1,27 @@
 /**
- * Book
+ * User
  *
  * @module      :: Model
  * @description :: A short summary of how this model works and what it represents.
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
+
 module.exports = {
   attributes: {
-    title: {
-      type: 'string'
-    },
-
-    authors: {
-      type: 'array'
-    },
-
-    isbn: {
+    name: {
       type: 'string',
       required: true
     },
 
-    categories: {
-      type: 'array'
+    email: {
+      type: 'string',
+      email: true,
+      required: true,
+      unique: true
+    },
+
+    encryptedPassword: {
+      type: 'string'
     }
   }
 };

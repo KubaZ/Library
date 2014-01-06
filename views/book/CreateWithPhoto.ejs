@@ -1,0 +1,158 @@
+
+<div style="text-align:center;">
+
+    <input id="Take-Picture" type="file" accept="image/*;capture=camera" />
+    <p id="textbit"></p>
+        <div class="result"></div>
+  <video id="screenshot-stream" class="videostream" autoplay=""></video>
+  <img id="screenshot" width="320" height="240" src="about:blank" >
+  <canvas id="screenshot-canvas" style="display:none;"></canvas>
+  <p><button id="screenshot-button">Capture</button> <button id="screenshot-stop-button">Stop</button></p>
+</div>
+<script>
+
+function errorCallback(e) {
+  if (e.code == 1) {
+    alert('User denied access to their camera');
+  } else {
+    alert('getUserMedia() not supported in your browser.');
+  }
+  //e.target.src = 'http://www.html5rocks.com/en/tutorials/video/basics/Chrome_ImF.ogv';
+}
+
+(function() {
+var video = document.querySelector('#screenshot-stream');
+var button = document.querySelector('#screenshot-button');
+var canvas = document.querySelector('#screenshot-canvas');
+var img = document.querySelector('#screenshot');
+var ctx = canvas.getContext('2d');
+var localMediaStream = null;
+
+function sizeCanvas() {
+  // video.onloadedmetadata not firing in Chrome so we have to hack.
+  // See crbug.com/110938.
+  setTimeout(function() {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    img.height = video.videoHeight;
+    img.width = video.videoWidth;
+  }, 100);
+}
+
+function snapshot() {
+  ctx.drawImage(video, 0, 0);
+  img.src = canvas.toDataURL('image/webp');
+}
+
+button.addEventListener('click', function(e) {
+  if (localMediaStream) {
+    snapshot();
+    return;
+  }
+
+  if (navigator.getUserMedia) {
+    navigator.getUserMedia('video', function(stream) {
+      video.src = stream;
+      localMediaStream = stream;
+      sizeCanvas();
+      button.textContent = 'Take Shot';
+    }, errorCallback);
+  } else if (navigator.webkitGetUserMedia) {
+    navigator.webkitGetUserMedia({video: true}, function(stream) {
+      video.src = window.URL.createObjectURL(stream);
+      localMediaStream = stream;
+      sizeCanvas();
+      button.textContent = 'Take Shot';
+    }, errorCallback);
+  } else {
+    errorCallback({target: video});
+  }
+}, false);
+
+video.addEventListener('click', snapshot, false);
+
+document.querySelector('#screenshot-stop-button').addEventListener('click', function(e) {
+  video.pause();
+  localMediaStream.stop(); // Doesn't do anything in Chrome.
+}, false);
+})();
+</script>
+<script type="text/javascript">
+        var takePicture = document.querySelector("#Take-Picture"),
+        showPicture = document.querySelector("#screenshot");
+        Result = document.querySelector("#textbit");
+        Canvas = document.querySelector("#screenshot-canvas");
+        Canvas.width=640;
+        Canvas.height=480;
+        var resultArray = [];
+        ctx = Canvas.getContext("2d");
+        var workerCount = 0;
+        function receiveMessage(e) {
+                if(e.data.success === "log") {
+                        console.log(e.data.result);
+                        return;
+                }
+                workerCount--;
+                if(e.data.success){
+                        var tempArray = e.data.result;
+                        for(var i = 0; i < tempArray.length; i++) {
+                                if(resultArray.indexOf(tempArray[i]) == -1) {
+                                        resultArray.push(tempArray[i]);
+                                }
+                        }
+                        Result.innerHTML=resultArray.join("<br />");
+                }else{
+                        if(resultArray.length === 0 && workerCount === 0) {
+                                Result.innerHTML="Decoding failed.";
+                        }
+                }
+        }
+        var DecodeWorker = new Worker("/js/DecoderWorker.js");
+        var RightWorker = new Worker("/js/DecoderWorker.js");
+        var LeftWorker = new Worker("/js/DecoderWorker.js");
+        var FlipWorker = new Worker("/js/DecoderWorker.js");
+        DecodeWorker.onmessage = receiveMessage;
+        RightWorker.onmessage = receiveMessage;
+        LeftWorker.onmessage = receiveMessage;
+        FlipWorker.onmessage = receiveMessage;
+        if(takePicture && showPicture) {
+                takePicture.onchange = function (event) {
+                        var files = event.target.files
+                        if (files && files.length > 0) {
+                                file = files[0];
+                                try {
+                                        var URL = window.URL || window.webkitURL;
+                                        var imgURL = URL.createObjectURL(file);
+                                        showPicture.src = imgURL;
+                                        URL.revokeObjectURL(imgURL);
+                                        DecodeBar();
+                                }
+                                catch (e) {
+                                        try {
+                                                var fileReader = new FileReader();
+                                                fileReader.onload = function (event) {
+                                                        showPicture.src = event.target.result;
+                                                };
+                                                fileReader.readAsDataURL(file);
+                                                DecodeBar();
+                                        }
+                                        catch (e) {
+                                                Result.innerHTML = "Neither createObjectURL or FileReader are supported";
+                                        }
+                                }
+                        }
+                };
+        }
+        function DecodeBar(){
+                showPicture.onload = function(){
+                        ctx.drawImage(showPicture,0,0,Canvas.width,Canvas.height);
+                        resultArray = [];
+                        workerCount = 4;
+                        Result.innerHTML="";
+                        DecodeWorker.postMessage({pixels: ctx.getImageData(0,0,Canvas.width,Canvas.height).data, cmd: "normal"});
+                        RightWorker.postMessage({pixels: ctx.getImageData(0,0,Canvas.width,Canvas.height).data, cmd: "right"});
+                        LeftWorker.postMessage({pixels: ctx.getImageData(0,0,Canvas.width,Canvas.height).data, cmd: "left"});
+                        FlipWorker.postMessage({pixels: ctx.getImageData(0,0,Canvas.width,Canvas.height).data, cmd: "flip"});
+                }
+        }
+</script>
