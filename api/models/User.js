@@ -33,7 +33,7 @@ module.exports = {
 
   beforeCreate: function (values, next) {
     if (!values.password || values.password !== values.confirmation) {
-      return next({err: ["Password doesn't match password confirmation."]});
+      return next({err: [res.i18n("Passwords don't match.")]});
     }
 
     require('bcrypt').hash(values.password, 10, function passwordEncrypted(err, encryptedPassword) {

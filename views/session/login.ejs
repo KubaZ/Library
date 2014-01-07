@@ -1,12 +1,12 @@
 <div class="container">
   <form method="GET" action="/session/create" class="form-signin">
-    <h3 class="form-signin-heading">Logowanie</h2>
+    <h3 class="form-signin-heading"><%= __('Loging') %></h2>
     <%- include ../common/flash.ejs %>
     <div class="form-controls">
       <input name="email" class="form-control" type="text" placeholder="Email" />
-      <input name="password" class="form-control" type="password" placeholder="Hasło" />
+      <input name="password" class="form-control" type="password" placeholder="<%= __('password') %>" />
     </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Zaloguj się</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit"><%= __('Sign in') %></button>
     <input type="hidden" name="_csrf" value="<%= _csrf %>" />
   </form>
 </div>

@@ -1,14 +1,14 @@
 <div class="container">
   <form method="POST" action="/user/create" class="form-signin" role="form">
-    <h3 class="form-signin-header">Stwórz użytkownika</h1>
+    <h3 class="form-signin-header"><%= __('Create user') %></h1>
     <%- include ../common/flash.ejs %>
     <div class="form-controls">
-      <input class="form-control" name="name" type="text" placeholder="Nazwa użytkownika" />
+      <input class="form-control" name="name" type="text" placeholder="<%= __('User name') %>" />
       <input class="form-control" name="email" type="text" placeholder="Email" />
-      <input class="form-control" name="password" type="password" placeholder="Hasło" />
-      <input class="form-control" name="confirmation" type="password" placeholder="Powtórz hasło" />
+      <input class="form-control" name="password" type="password" placeholder="<%= __('password') %>" />
+      <input class="form-control" name="confirmation" type="password" placeholder="<%= __('Repeat password') %>" />
     </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Dodaj</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit"><%= __('Add') %></button>
     <input type="hidden" name="_csrf" value="<%= _csrf %>" />
   </form>
 </div>

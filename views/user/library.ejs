@@ -1,11 +1,11 @@
 <div class="container">
     <form id="form" method="POST" action="/book/create" class="form">
-        <h3 class="form-heading">Dodaj książkę:</h4>
+        <h3 class="form-heading"><%= __('Add book:') %></h4>
         <%- include ../common/flash.ejs %>
         <div class="input-group">
             <input class="form-control" name="isbn" type="text" placeholder="ISBN" />
             <span class="input-group-btn">
-                <button class="btn btn-default" type="submit">Dodaj</button>
+                <button class="btn btn-default" type="submit"><%= __('Add') %></button>
             </span>
         </div>
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
@@ -13,12 +13,12 @@
     <table class="table table-striped table-hover" style="margin-top: 30px;">
         <thead>
             <tr>
-                <td>Tytuł</td>
-                <td>Autor</td>
-                <td>Kategoria</td>
+                <td><%= __('Title') %></td>
+                <td><%= __('Author') %></td>
+                <td><%= __('Cateogry') %></td>
                 <td>ISBN</td>
-                <td>Data dodania</td>
-                <td>Usuń</td>
+                <td><%= __('Create date:') %></td>
+                <td><%= __('Remove') %></td>
             </tr>
         </thead>
         <tbody>

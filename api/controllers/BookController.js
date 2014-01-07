@@ -25,7 +25,7 @@ module.exports = {
     if (req.param('isbn').length === 0) {
       req.session.flash = {
         type: 'alert-danger',
-        content: [{name: 'isbn field blank'}]
+        content: [{name: res.i18n("Field can't be blank.")}]
       };
       return res.redirect('/user/library');
     }
@@ -75,7 +75,7 @@ module.exports = {
 
                 req.session.flash = {
                   type: 'alert-success',
-                  content: [{message: 'Book added to collection.'}]
+                  content: [{message: res.i18n('Book added to collection.')}]
                 };
                 return res.redirect('/user/library');
               });
@@ -83,7 +83,7 @@ module.exports = {
               console.log('not found');
               req.session.flash = {
                 type: 'alert-danger',
-                content: [{message: 'Book not Found.'}]
+                content: [{message: res.i18n('Book not found.')}]
               };
 
               return res.redirect('/user/library');
@@ -102,12 +102,12 @@ module.exports = {
           book.user.push(req.session.User.email);
           req.session.flash = {
             type: 'alert-success',
-            content: [{message: 'Book added to collection.'}]
+            content: [{message: res.i18n('Book added to collection.')}]
           };
         } else {
           req.session.flash = {
             type: 'alert-info',
-            content: [{message: 'Book already in collection.'}]
+            content: [{message: res.i18n('Book already in collection.')}]
           };
         }
 

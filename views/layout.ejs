@@ -43,15 +43,15 @@
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <% if (session.authenticated) { %>
-              <li><a href="/book">Moja biblioteka</a></li>
+              <li><a href="/book"><%= __('My library') %></a></li>
             <% } %>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <% if (session.authenticated) { %>
-              <li><a href="/logout">Wyloguj się</a></li>
+              <li><a href="/logout"><%= __('Sign out') %></a></li>
             <% } else { %>
-              <li><a href="/user/register">Stwórz konto</a></li>
-              <li><a href="/login">Zaloguj się</a></li>
+              <li><a href="/user/register"><%= __('Create account') %></a></li>
+              <li><a href="/login"><%= __('Sign in') %></a></li>
             <% } %>
           </ul>
         </div>

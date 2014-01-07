@@ -16,17 +16,22 @@ module.exports.policies = {
 
   // Default policy for all controllers and actions
   // (`true` allows public access)
-  '*': 'flash',
+  '*': 'isAuthenticated',
 
   user: {
   	'create': 'flash',
     'register': 'flash',
-    'library': ['flash', 'isAuthenticated'],
+    'library': ['isAuthenticated', 'flash'],
   	'*': 'isAuthenticated'
   },
 
   book: {
   	'*': 'isAuthenticated'
+  },
+
+  session: {
+  	'*': 'flash',
+  	'logout': 'isAuthenticated'
   }
 
   /*

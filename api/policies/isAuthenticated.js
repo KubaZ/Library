@@ -17,7 +17,7 @@ module.exports = function(req, res, next) {
 
   // User is not allowed
   // (default res.forbidden() behavior can be overridden in `config/403.js`)
-  var requireLoginError = [{name: 'requireLogin', message: 'You must be signed in.'}];
+  var requireLoginError = [{name: res.i18n('Login required.'), message: res.i18n('You must be signed in to see this page.')}];
   req.session.flash = {
     err: requireLoginError
   };
