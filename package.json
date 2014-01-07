@@ -23,5 +23,8 @@
   "main": "app.js",
   "repository": "",
   "author": "",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.8.0"
+  }
 }

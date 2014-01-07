@@ -409,6 +409,10 @@ module.exports = function (grunt) {
         // When assets are changed:
         tasks: ['compileAssets', 'linkAssets']
       }
+    },
+
+    jshint: {
+      all: ['Gruntfile.js', 'api/**/*.js', 'config/**/*.js']
     }
   });
 
@@ -465,6 +469,11 @@ module.exports = function (grunt) {
     'sails-linker:prodStylesJADE',
     'sails-linker:devTplJADE'
   ]);
+
+
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+
+  grunt.registerTask('lint', ['jshint']);
 
   // When API files are changed:
   // grunt.event.on('watch', function(action, filepath) {
