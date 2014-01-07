@@ -80,7 +80,6 @@ module.exports = {
                 return res.redirect('/user/library');
               });
             } else {
-              console.log('not found');
               req.session.flash = {
                 type: 'alert-danger',
                 content: [{message: res.i18n('Book not found.')}]
@@ -100,24 +99,37 @@ module.exports = {
       } else {
         if (_.indexOf(book.user, req.session.User.email) === -1) {
           book.user.push(req.session.User.email);
-          req.session.flash = {
-            type: 'alert-success',
-            content: [{message: res.i18n('Book added to collection.')}]
-          };
+          book.save(function (err) {
+            if (err) {
+              req.session.flash = {
+                type: 'alert-danger',
+                content: err
+              };
+
+              return res.redirect('/user/library');
+            }
+
+            req.session.flash = {
+              type: 'alert-success',
+              content: [{message: res.i18n('Book added to collection.')}]
+            };
+
+            return res.redirect('/user/library');
+          });
         } else {
           req.session.flash = {
             type: 'alert-info',
             content: [{message: res.i18n('Book already in collection.')}]
           };
-        }
 
-        return res.redirect('/user/library');
+          return res.redirect('/user/library');
+        }
       }
     });
   },
 
   destroy: function (req, res) {
-    Book.destroy({isbn: req.param('isbn'), user: req.session.User.email}).done(function(err, book) {
+    Book.findOne({isbn: req.param('isbn'), user: req.session.User.email}).done(function(err, book) {
       if (err) {
         req.session.flash = {
           type: 'alert-warning',
@@ -126,12 +138,44 @@ module.exports = {
         return res.redirect('/user/library');
       }
 
-      req.session.flash = {
-        type: 'alert-success',
-        content: [{message: res.i18n('Book removed from collection.')}]
-      };
+      if (book.user.length > 1) {
+        book.user = _.without(book.user, req.session.User.email);
+        book.save(function (err) {
+          if (err) {
+            req.session.flash = {
+              type: 'alert-danger',
+              content: err
+            };
 
-      res.redirect('/user/library');
+            return res.redirect('/user/library');
+          }
+
+          req.session.flash = {
+            type: 'alert-success',
+            content: [{message: res.i18n('Book removed from collection.')}]
+          };
+
+          return res.redirect('/user/library');
+        });
+      } else {
+        book.destroy(function (err) {
+          if (err) {
+            req.session.flash = {
+              type: 'alert-danger',
+              content: err
+            };
+
+            return res.redirect('/user/library');
+          }
+        });
+
+        req.session.flash = {
+          type: 'alert-success',
+          content: [{message: res.i18n('Book removed from collection.')}]
+        };
+
+        res.redirect('/user/library');
+      }
     });
   }
 };
