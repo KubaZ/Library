@@ -36,7 +36,7 @@ module.exports = {
     });
   },
 
-  index: function (req, res) {
+  library: function (req, res) {
     Book.find({user: req.session.User.email}).done(function(err, books) {
       if (err) {
         req.session.flash = {
@@ -44,7 +44,7 @@ module.exports = {
           content: err
         };
       }
-      return res.view({
+        return res.view({
           flash: req.session.flash,
           books: books
         });

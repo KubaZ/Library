@@ -22,17 +22,24 @@ module.exports = {
   },
 
   create: function (req, res, next) {
-    Book.find({isbn: req.param('isbn')}).done(function (err, book) {
+    if (req.param('isbn').length === 0) {
+      req.session.flash = {
+        type: 'alert-danger',
+        content: [{name: 'isbn field blank'}]
+      };
+      return res.redirect('/user/library');
+    }
+
+    Book.findOne({isbn: req.param('isbn')}).done(function (err, book) {
       if (err) {
         req.session.flash = {
           type: 'alert-danger',
           content: err
         };
-        res.redirect('/user/library');
-        next();
+        return res.redirect('/user/library');
       }
 
-      if (book.length === 0) {
+      if (!book) {
         https.get('https://www.googleapis.com/books/v1/volumes?q=ISBN+' +
           req.param('isbn') + '&key=' + sails.config.googleBooksApiKey, function(response) {
           var data = '',
@@ -46,7 +53,6 @@ module.exports = {
             var body = JSON.parse(data);
 
             if (body.items) {
-              console.log('found');
               if (body.items[0].volumeInfo.categories) {
                 categories = body.items[0].volumeInfo.categories;
               }
@@ -64,16 +70,14 @@ module.exports = {
                     content: err
                   };
 
-                  res.redirect('/user/library');
-                  next();
+                  return res.redirect('/user/library');
                 }
 
                 req.session.flash = {
                   type: 'alert-success',
                   content: [{message: 'Book added to collection.'}]
                 };
-                res.redirect('/user/library');
-                next();
+                return res.redirect('/user/library');
               });
             } else {
               console.log('not found');
@@ -82,7 +86,7 @@ module.exports = {
                 content: [{message: 'Book not Found.'}]
               };
 
-              res.redirect('/user/library');
+              return res.redirect('/user/library');
             }
           });
         }).on('error', function(err) {
@@ -91,11 +95,10 @@ module.exports = {
             content: [{message: err}]
           };
 
-          res.redirect('/user/library');
-          next();
+          return res.redirect('/user/library');
         });
       } else {
-        if (_.indexOf(book.user, req.session.User.email) !== -1) {
+        if (_.indexOf(book.user, req.session.User.email) === -1) {
           book.user.push(req.session.User.email);
           req.session.flash = {
             type: 'alert-success',
@@ -108,8 +111,7 @@ module.exports = {
           };
         }
 
-        res.redirect('/user/library');
-        next();
+        return res.redirect('/user/library');
       }
     });
   },

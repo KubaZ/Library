@@ -42,11 +42,6 @@ module.exports.routes = {
     action: 'login'
   },
 
-  '/user/library': {
-    controller: 'UserController',
-    action: 'index'
-  },
-
   '/logout': {
     controller: 'SessionController',
     action: 'logout'
