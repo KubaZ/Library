@@ -55,7 +55,10 @@ module.exports = {
         if (err) return next(err);
 
         if (!valid) {
-          var invalidPassword = [{name: 'Invalid Password', message: 'Invalid username and password combination'}];
+          var invalidPassword = [{
+            name: res.i18n('Invalid data.'),
+            message: res.i18n('Invalid username and password combination')
+          }];
           req.session.flash = {
             type: 'alert-warning',
             content: invalidPassword

@@ -27,6 +27,6 @@
   "Book removed from collection.": "Book removed from collection.",
   "Account not found.": "Account not found.",
   "The email addres: %s was not found.": "The email addres: %s was not found.",
-  "Invalid data": "Invalid data",
+  "Invalid data.": "Invalid data",
   "Invalid username and password combination.": "Invalid username and password combination."
 }
