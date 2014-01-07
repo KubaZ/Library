@@ -24,5 +24,9 @@
   "Book added to collection.": "Książka dodana do kolekcji.",
   "Book already in collection.": "Książka już jest w kolekcji.",
   "Book not found.": "Nie znaleziono książki.",
-  "Book removed from collection.": "Książka usunięta z kolekcji."
+  "Book removed from collection.": "Książka usunięta z kolekcji.",
+  "Account not found.": "Nie znaleziono konta.",
+  "The email addres: %s was not found.": "Adres email: %s nie został znaleziony.",
+  "Invalid data": "Niepoprawne dane.",
+  "Invalid username and password combination.": "Niepoprawna kombinacja nazwy użytkownika i hasła."
 }

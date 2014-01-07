@@ -40,8 +40,10 @@ module.exports = {
       if (err) return next(err);
 
       if (!user) {
-        var noAccountError = [{name: 'noAccount', message: 'The email; addres ' +
-        req.param('email') + ' not found.'}];
+        var noAccountError = [{
+          name: 'noAccount',
+          message: res.i18n('The email addres: %s was not found.', req.param('email'))
+        }];
         req.session.flash = {
           type: 'alert-danger',
           content: noAccountError

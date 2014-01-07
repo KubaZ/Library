@@ -128,7 +128,7 @@ module.exports = {
 
       req.session.flash = {
         type: 'alert-success',
-        content: [{message: 'Book removed from collection.'}]
+        content: [{message: res.i18n('Book removed from collection.')}]
       };
 
       res.redirect('/user/library');
