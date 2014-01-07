@@ -21,6 +21,7 @@ module.exports.policies = {
   user: {
   	'create': 'flash',
     'register': 'flash',
+    'library': ['flash', 'isAuthenticated'],
   	'*': 'isAuthenticated'
   },
 

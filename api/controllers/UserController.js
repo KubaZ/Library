@@ -44,10 +44,10 @@ module.exports = {
           content: err
         };
       }
-        return res.view({
-          flash: req.session.flash,
-          books: books
-        });
+
+      res.locals.books = books;
+
+      res.view();
     });
   },
 };
