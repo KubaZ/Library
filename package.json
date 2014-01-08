@@ -17,14 +17,20 @@
     "bcrypt": "~0.7.7"
   },
   "scripts": {
-    "start": "node app.js",
-    "debug": "node debug app.js"
+    "test": "make test",
+    "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec -t 5000"
   },
   "main": "app.js",
   "repository": "",
   "author": "",
   "license": "",
   "devDependencies": {
-    "grunt-contrib-jshint": "~0.8.0"
+    "grunt-contrib-jshint": "~0.8.0",
+    "mocha": "~1.16.2",
+    "growl": "~1.7.0",
+    "istanbul": "~0.2.3",
+    "requireindex": "~1.0.1",
+    "require-directory": "~1.2.0",
+    "superagent": "~0.16.0"
   }
 }
