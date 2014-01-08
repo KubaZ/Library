@@ -58,8 +58,6 @@ module.exports = {
                             return res.redirect('/user/library');
                         }
 
-                        console.log(newBook)
-
                         utils.setFlash(req, 'alert-success', res.i18n('Book added to collection.'));
                         return res.redirect('/user/library');
                     });
