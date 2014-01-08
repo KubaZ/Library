@@ -14,8 +14,7 @@
  *
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
-var bcrypt = require('bcrypt'),
-    User = require('../models/User');
+var bcrypt = require('bcrypt');
 
 module.exports = {
     login: function(req, res) {

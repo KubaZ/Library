@@ -14,8 +14,6 @@
  *
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
-var Book = require('../models/Book'),
-    User = require('../models/User');
 
 module.exports = {
     register: function(req, res) {
@@ -23,9 +21,12 @@ module.exports = {
     },
 
     create: function(req, res) {
+        if (req.params.all().length < 1) {
+            return res.redirect('/user/register');
+        }
+
         User.create(req.params.all(), function userCreated(err) {
             if (err) {
-                console.log(err);
                 req.session.flash = {
                     type: 'alert-danger',
                     content: err

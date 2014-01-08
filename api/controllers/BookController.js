@@ -14,8 +14,7 @@
  *
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
-var https = require('https'),
-    Book = require('../models/Book');
+var https = require('https');
 
 module.exports = {
     index: function(req, res) {
