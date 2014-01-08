@@ -14,6 +14,7 @@
  *
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
+var utils = require('../services/utils');
 
 module.exports = {
     register: function(req, res) {
@@ -27,10 +28,7 @@ module.exports = {
 
         User.create(req.params.all(), function userCreated(err) {
             if (err) {
-                req.session.flash = {
-                    type: 'alert-danger',
-                    content: err
-                };
+                utils.setFlash(req, 'alert-danger', err);
 
                 return res.redirect('/user/register');
             }
@@ -44,10 +42,7 @@ module.exports = {
             user: req.session.User.email
         }).done(function(err, books) {
             if (err) {
-                req.session.flash = {
-                    type: 'alert-warning',
-                    content: err
-                };
+                utils.setFlash(req, 'alert-warning', err);
             }
 
             res.locals.books = books;

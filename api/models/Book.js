@@ -31,6 +31,27 @@ module.exports = {
         user: {
             type: 'array',
             required: true
+        },
+
+        addUser: function (userEmail, callback) {
+            this.user.push(userEmail);
+            this.saveChanges(callback);
+        },
+
+        removeUser: function (userEmail, callback) {
+            this.user = _.without(this.user, userEmail);
+            this.saveChanges(callback);
+        },
+
+        saveChanges: function (callback) {
+            console.log('book updated');
+            this.save(function(err) {
+                if (err) {
+                    return callback(err);
+                }
+
+                return callback();
+            });
         }
     }
 };

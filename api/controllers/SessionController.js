@@ -14,7 +14,8 @@
  *
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt'),
+    utils = require('../services/utils');
 
 module.exports = {
     login: function(req, res) {
@@ -23,15 +24,10 @@ module.exports = {
 
     create: function(req, res, next) {
         if (!req.param('email') || !req.param('password')) {
-            var usernamePasswordRequiredError = [{
+            utils.setFlash(req, 'alert-danger', [{
                 name: res.i18n('Email and password required.'),
                 message: res.i18n('You must enter both username and password.')
-            }];
-
-            req.session.flash = {
-                type: 'alert-danger',
-                content: usernamePasswordRequiredError
-            };
+            }]);
 
             return res.redirect('/login');
         }
@@ -42,14 +38,11 @@ module.exports = {
             }
 
             if (!user) {
-                var noAccountError = [{
+                utils.setFlash(req, 'alert-danger', [{
                     name: 'noAccount',
                     message: res.i18n('The email addres: %s was not found.', req.param('email'))
-                }];
-                req.session.flash = {
-                    type: 'alert-danger',
-                    content: noAccountError
-                };
+                }]);
+
                 return res.redirect('/login');
             }
 
@@ -59,14 +52,11 @@ module.exports = {
                 }
 
                 if (!valid) {
-                    var invalidPassword = [{
+                    utils.setFlash(req, 'alert-warning', [{
                         name: res.i18n('Invalid data.'),
                         message: res.i18n('Invalid username and password combination.')
-                    }];
-                    req.session.flash = {
-                        type: 'alert-warning',
-                        content: invalidPassword
-                    };
+                    }]);
+
                     return res.redirect('/login');
                 }
 

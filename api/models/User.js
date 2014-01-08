@@ -34,7 +34,7 @@ module.exports = {
     beforeCreate: function(values, next) {
         if (!values.password || values.password !== values.confirmation) {
             return next({
-                err: [res.i18n('Passwords don\'t match.')]
+                err: [i18n('Passwords don\'t match.')]
             });
         }
 

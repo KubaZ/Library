@@ -7,6 +7,8 @@
  * @docs        :: http://sailsjs.org/#!documentation/policies
  *
  */
+var utils = require('../services/utils');
+
 module.exports = function(req, res, next) {
 
     // User is allowed, proceed to the next policy,
@@ -17,12 +19,10 @@ module.exports = function(req, res, next) {
 
     // User is not allowed
     // (default res.forbidden() behavior can be overridden in `config/403.js`)
-    var requireLoginError = [{
+    utils.setFlash(req, 'alert-danger', [{
         name: res.i18n('Login required.'),
         message: res.i18n('You must be signed in to see this page.')
-    }];
-    req.session.flash = {
-        err: requireLoginError
-    };
+    }]);
+
     return res.redirect('/login');
 };

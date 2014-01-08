@@ -1,17 +1,19 @@
 <% if (flash && flash.content) { %>
   <div class="alert <%= flash.type %>">
-    <% if (flash.content.length > 0) { %>
-      <% for (var i = 0; i < flash.content.length; i++) { %>
-        <p>
+    <p>
+      <% if (_.isObject(flash.content)) { %>
+        <% for (var i = 0; i < flash.content.length; i++) { %>
           <% Object.keys(flash.content[i]).forEach(function (key) { %>
             <% if (key === "name") { %>
               <strong><%= flash.content[i][key] %></strong>
             <% } else { %>
               <span><%= flash.content[i][key] %></span>
             <% } %>
-          <%  }) %>
-        </p>
+          <% }) %>
+        <% } %>
+      <% } else { %>
+        <%= flash.content %>
       <% } %>
-    <% } %>
+    </p>
   </div>
 <% } %>
