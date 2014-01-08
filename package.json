@@ -29,7 +29,6 @@
     "mocha": "~1.16.2",
     "growl": "~1.7.0",
     "istanbul": "~0.2.3",
-    "requireindex": "~1.0.1",
     "require-directory": "~1.2.0",
     "superagent": "~0.16.0"
   }
