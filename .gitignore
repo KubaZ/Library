@@ -38,6 +38,8 @@ npm-debug.log
 nbproject
 .idea
 coverage
+assets/components/
+bower_components/
 
 
 ########################

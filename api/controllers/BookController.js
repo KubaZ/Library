@@ -14,21 +14,21 @@
  *
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
-var GoogleBookApi = require('../services/GoogleBookApi'),
-    utils = require('../services/utils');
+var GoogleBookApi = require('../services/GoogleBookApi');
+var utils = require('../services/utils');
 
 module.exports = {
     index: function(req, res) {
         res.redirect('/user/library');
     },
 
-    create: function(req, res, next) {
+    create: function(req, res) {
         var userEmail = req.session.User.email;
 
         if (req.param('isbn').length === 0) {
             utils.setFlash(req, 'alert-danger', res.i18n('Field can\'t be blank.'));
 
-            return res.redirect('/user/library');
+            return res.json(req.session.flash);
         }
 
         Book.findOne({
@@ -37,11 +37,11 @@ module.exports = {
             if (err) {
                 utils.setFlash(req, 'alert-danger', err);
 
-                return res.redirect('/user/library');
+                return res.json(req.session.flash);
             }
 
             if (!book) {
-                GoogleBookApi.getBookData(req.param('isbn'), userEmail, function (err, newBook) {
+                GoogleBookApi.getBookData(req.param('isbn'), req.session.User.email, function (err, newBook) {
                     if (err) {
                         if (err === 404) {
                             utils.setFlash(req, 'alert-danger', res.i18n('Book not found.'));
@@ -62,24 +62,11 @@ module.exports = {
                         return res.redirect('/user/library');
                     });
                 });
-            } else {
-                if (_.indexOf(book.user, userEmail) === -1) {
-                    book.addUser(userEmail, function(err) {
-                        if (err) {
-                            utils.setFlash(req, 'alert-danger', err);
-                            return res.redirect('/user/library');
-                        }
-
-                        utils.setFlash(req, 'alert-success', res.i18n('Book added to collection.'));
-                        return res.redirect('/user/library');
-                    });
-                } else {
-                    utils.setFlash(req, 'alert-info', res.i18n('Book already in collection.'));
-                    return res.redirect('/user/library');
-                }
             }
+
+            utils.setFlash(req, 'alert-info', res.i18n('Book already in collection.'));
+            return res.redirect('/user/library');
         });
-        console.log('after');
     },
 
     destroy: function(req, res) {

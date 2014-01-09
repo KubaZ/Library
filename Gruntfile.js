@@ -413,6 +413,20 @@ module.exports = function(grunt) {
                 'config/**/*.js',
                 'test/**/*.js'
             ]
+        },
+
+        bower: {
+            install: {
+                options: {
+                    targetDir: './assets/components',
+                    layout: 'byType',
+                    install: true,
+                    verbose: false,
+                    cleanTargetDir: false,
+                    cleanBowerDir: false,
+                    bowerOptions: {}
+                }
+            }
         }
     });
 
@@ -472,6 +486,7 @@ module.exports = function(grunt) {
 
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-bower-task');
 
     grunt.registerTask('lint', ['jshint']);
 

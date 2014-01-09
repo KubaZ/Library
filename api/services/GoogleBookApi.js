@@ -2,6 +2,7 @@ var https = require('https');
 
 module.exports = {
     getBookData: function (isbn, userEmail, callback) {
+        console.log('Google called');
         var book = null;
 
         https.get('https://www.googleapis.com/books/v1/volumes?q=ISBN+' +
