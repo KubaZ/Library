@@ -36,7 +36,5 @@ module.exports = {
         }).on('error', function(err) {
             callback(err, book);
         });
-    },
-
-    createBook
+    }
 };
