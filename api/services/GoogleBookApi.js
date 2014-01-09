@@ -1,8 +1,7 @@
 var https = require('https');
 
 module.exports = {
-    getBookData: function (isbn, userEmail, callback) {
-        console.log('Google called');
+    getBookData: function (isbn, callback) {
         var book = null;
 
         https.get('https://www.googleapis.com/books/v1/volumes?q=ISBN+' +
@@ -26,8 +25,7 @@ module.exports = {
                         isbn: isbn,
                         title: body.items[0].volumeInfo.title,
                         authors: body.items[0].volumeInfo.authors,
-                        categories: categories,
-                        user: [userEmail]
+                        categories: categories
                     };
 
                     callback(undefined, book);
@@ -38,5 +36,7 @@ module.exports = {
         }).on('error', function(err) {
             callback(err, book);
         });
-    }
+    },
+
+    createBook
 };

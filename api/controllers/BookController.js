@@ -41,7 +41,7 @@ module.exports = {
             }
 
             if (!book) {
-                GoogleBookApi.getBookData(req.param('isbn'), req.session.User.email, function (err, newBook) {
+                GoogleBookApi.getBookData(req.param('isbn'), function (err, newBook) {
                     if (err) {
                         if (err === 404) {
                             utils.setFlash(req, 'alert-danger', res.i18n('Book not found.'));
